@@ -1,81 +1,55 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <assert.h>
+//////
+#ifndef _STACK_H
+    #define _STACK_H
+#endif
+//////
+#ifndef _STDIO_H
+    #include <stdio.h>
+#endif
 
-#define     default_stack_size_value 0
-#define default_stack_capacity_value 100
-#define         default_canary_value 0xDEADDED
+#ifndef _STDLIB_H
+    #include <stdlib.h>
+#endif
 
-#define hash_const 23
-#define   hash_mod (int)(1e9 + 7)
+#ifndef _MATH_H
+    #include <math.h>
+#endif
+//////
+
+//public funcs & consts (for user)
 
 typedef int stack_type;
-#define int_stack
 
-#ifdef int_stack
-    #define poison 0xDEADDED
-#endif
+#define print_flag "%d"
 
-#ifdef float_stack
-    #define poison -9,888075496
-#endif
-
-#ifdef double_stack
-    #define poison 0xDEADDED
-#endif
-
-#ifdef long_long_stack
-    #define poison 0xDEADDED
-#endif
-
-#ifdef string_stack
-    #define poison NULL
-#endif
 
 typedef struct Stack{
+
     int left_canary;
 
     size_t size;
 
     size_t capacity;
 
-    stack_type *data;
-
     struct Stack *copy;
 
-    int hash;
+    stack_type *data;
 
     int right_canary;
+
 } Stack;
 
-Stack Stack_Init();
 
-void Enlarge_Stack(Stack *stack);
-
-void Reduce_Stack(Stack *stack);
-
-void Resize_Stack(Stack *stack);
-
-void Push(Stack *stack, stack_type value);
-
-void Empty_Stack();
-
-stack_type Pop(Stack *stack);
-
-stack_type Back(Stack *stack);
-
-void Clear(Stack *stack);
-
-void Insert_Poison(Stack *stack);
-
-int Hash_Formula(int first, int second);
-
-int Count_Stack_Hash(Stack *stack);
+void Stack_Init(Stack *new_stack);
 
 int Size(Stack *stack);
 
-int Capacity(Stack *stack);
+stack_type Back(Stack *stack);
 
-void Copy_Stack(Stack *stack);
+void Push(Stack *stack, stack_type value);
 
-void Recover_Stack(Stack *stack);
+stack_type Pop(Stack *stack);
+
+void Clear(Stack *stack);
+
+//=====================
