@@ -1,21 +1,29 @@
 #ifndef ASSERTION_H
-    #define ASSERTION_H
-#endif
+#define ASSERTION_H
 
-#ifndef FUNCS_PRV_H
-    #include "funcs_prv.h"
-#endif
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#include <assert.h>
 
-int Dump_Stack(Stack *stack, FILE *log);
+//include declaration of all functions.
 
-int Verifier(Stack *stack, FILE *log);
+#include "funcs_prv.h"
 
-typedef enum status{
+
+int m_stack_dump(m_stack *stack, FILE *log);
+
+int m_stack_verifier(m_stack *stack, FILE *log);
+
+typedef enum stack_status {
     STACK_ALRIGHT,
     STACK_NULL,
     STACK_COPY_NULL,
     STACK_LEFT_CANARY_DEAD,
     STACK_RIGHT_CANARY_DEAD,
     STACK_OVERSIZE,
-    STACK_POISON_OK
-} status;
+    STACK_POISON_SPILLED
+} stack_status;
+
+
+#endif /* "assertion.h" */

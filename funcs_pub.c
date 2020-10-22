@@ -1,97 +1,98 @@
-#ifndef FUNCS_PRV_H
-    #include "funcs_prv.h"
-#endif
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#include <assert.h>
 
-#ifndef ASSERTION_H
-    #include "assertion.h"
-#endif
-
-
+//include declarations of all functions.
+#include "funcs_prv.h"
 
 //description of public functions
 
-Stack *Init_Stack(){
-    Stack *new = calloc(1, sizeof(Stack));
-    assert(new != NULL);
+m_stack *m_stack_init()
+{
+    m_stack *new_stack = calloc(1, sizeof(m_stack));
+    assert(new_stack != NULL);
 
-    new->copy  = calloc(1, sizeof(Stack));
-    assert(new->copy != NULL);
+    new_stack->copy  = calloc(1, sizeof(m_stack));
+    assert(new_stack->copy != NULL);
 
-    Set_Defaults(new);
+    m_stack_set_deflts(new_stack);
+    m_stack_ins_poison(new_stack);
 
-    Insert_Poison(new);
-
-    printf("Init:\n");
-
-    return new;
+    return new_stack;
 }
 
-size_t Size(Stack *stack){
-    assert(stack != NULL);
+size_t m_stack_size(m_stack *cur_stack)
+{
+    assert(cur_stack != NULL);
 
-    return stack->size;
+    return cur_stack->size;
 }
 
-stack_type Back(Stack *stack){
-    assert(stack != NULL);
+m_stack_type m_stack_back(m_stack *cur_stack)
+{
+    assert(cur_stack != NULL);
 
-    if(stack->size == 0){
+    if (cur_stack->size == 0) {
         printf("Stack is empty!\n");
 
         return 0;
     }
 
-    return stack->data[stack->size - 1];
+    return cur_stack->data[cur_stack->size - 1];
 }
 
-void Push(Stack *stack, stack_type value){
-    assert(stack != NULL);
+void m_stack_push(m_stack *cur_stack, m_stack_type value)
+{
+    assert(cur_stack != NULL);
 
-    stack->size++;
-    stack->copy->size++;
-    Resize_Stack(stack);
-    Insert_Poison(stack);
+    cur_stack->size++;
+    cur_stack->copy->size++;
 
-    stack->data[stack->size - 1] = value;
-    stack->copy->data[stack->copy->size - 1] = value;
+    m_stack_resize(cur_stack);
+    m_stack_ins_poison(cur_stack);
 
-    printf("Push:\n");
+    cur_stack->data[cur_stack->size - 1] = value;
+    cur_stack->copy->data[cur_stack->size - 1] = value;
 }
 
-stack_type Pop(Stack *stack){
-    assert(stack != NULL);
+m_stack_type m_stack_pop(m_stack *cur_stack)
+{
+    assert(cur_stack != NULL);
 
-    if(stack->size == 0){
+    if (cur_stack->size == 0) {
         printf("Stack is empty\n");
 
         return 0;
     }
 
-    stack_type temp = stack->data[stack->size - 1];
-    stack->data[stack->size - 1] = STACK_POISON;
-    stack->copy->data[stack->copy->size - 1] = STACK_POISON;
+    m_stack_type temp = cur_stack->data[cur_stack->size - 1];
+    cur_stack->data[cur_stack->size - 1] = STACK_POISON;
+    cur_stack->copy->data[cur_stack->size - 1] = STACK_POISON;
 
-    stack->size--;
-    stack->copy->size--;
-    Resize_Stack(stack);
+    cur_stack->size--;
+    cur_stack->copy->size--;
+    m_stack_resize(cur_stack);
 
     return temp;
 }
 
-void Clear_Stack(Stack *stack){
-    assert(stack != NULL);
+void m_stack_clear(m_stack *cur_stack)
+{
+    assert(cur_stack != NULL);
 
-    Clear_Stack_Local(stack->copy);
-    Clear_Stack_Local(stack);
+    m_stack_clear_lcl(cur_stack->copy);
+    m_stack_clear_lcl(cur_stack);
 
-    stack = Init_Stack();
+    cur_stack = m_stack_init();
 }
 
-void Destruct_Stack(Stack *stack){
-    assert(stack != NULL);
+void  m_stack_destrct(m_stack *cur_stack)
+{
+    assert(cur_stack != NULL);
 
-    Clear_Stack_Local(stack->copy);
-    Clear_Stack_Local(stack);
+    m_stack_clear_lcl(cur_stack->copy);
+    m_stack_clear_lcl(cur_stack);
 }
 
 //==================================

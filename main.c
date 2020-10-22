@@ -3,31 +3,22 @@
 #include <math.h>
 #include <assert.h>
 #include "funcs_pub.h"
+#include "assertion.h"
 
-int main(){
-    Stack *a;
-    a = Init_Stack();
-    for(int pos = 0; pos < 5; pos++)
-        Push(a, 1);
-    // //Dump_Stack(&a);
-    // //Push(a, 2);
-    // //Dump_Stack(&a);
-    // //Push(a, 3);
-    // //Dump_Stack(&a);
-    // printf(PRINT_FLAG, Back(a));
-    // printf("\n");
-    // // Pop(a);
-    // // Pop(a);
-    // // Pop(a);
-    // // Pop(a);
-    // // Pop(a);
-    // // Pop(a);
-    // // Pop(a);
-    // // Pop(a);
+int main ()
+{
+    m_stack *a;
+    a = m_stack_init();
+    FILE *log = fopen("log.out", "w");
+    for (int pos = 0; pos < 100; pos++) {
+        m_stack_push(a, 1);
+        fprintf(log, "original:");
+        m_stack_dump(a, log);
+        fprintf(log, "copy:");
+        m_stack_dump(a->copy, log);
+    }
 
-    // printf("%zu\n", Size(a));
-
-    Destruct_Stack(a);
+    m_stack_destrct(a);
 
     return 0;
 }

@@ -1,28 +1,28 @@
-//
 #ifndef STACK_DEF_H
-    #define STACK_DEF_H
-#endif
-//
-#ifndef _STDIO_H
-    #include <stdio.h>
-#endif
+#define STACK_DEF_H
 
-#ifndef STACK_DECL_H
-    #include "stack_decl.h"
-#endif
 
-typedef struct Stack{
+#include <stdio.h>
+#include <stdlib.h>
 
-    int left_cnry;
 
-    size_t size;    
+//include declaration of m_stack.
+#include "stack_decl.h"
+
+
+typedef struct m_stack {
+    unsigned long long left_cnry;
+
+    size_t size;
 
     size_t cpcty;
 
-    struct Stack *copy;
+    struct m_stack *copy;
 
-    stack_type *data;
+    m_stack_type *data;
 
-    int right_cnry;
-    
-} Stack;
+    unsigned long long right_cnry;
+} m_stack;
+
+
+#endif /* "stack_def.h" */
