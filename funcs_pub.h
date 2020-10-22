@@ -1,44 +1,35 @@
-//////
 #ifndef FUNCS_PUB_H
-    #define FUNCS_PUB_H
-#endif
-//////
-#ifndef STACK_DECL_H
-    #include "stack_decl.h"
-#endif
-
-#ifndef _STDIO_H
-    #include <stdio.h>
-#endif
-
-#ifndef _STDLIB_H
-    #include <stdlib.h>
-#endif
-
-#ifndef _MATH_H
-    #include <math.h>
-#endif
-
-#ifndef _ASSERT_H
-    #include <assert.h>
-#endif
-//////
+#define FUNCS_PUB_H
 
 
-//public funcs
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#include <assert.h>
+#include <ctype.h>
 
-Stack *Init_Stack();
 
-size_t Size(Stack *stack);
+//include declaration of m_stack.
+#include "stack_decl.h"
 
-stack_type Back(Stack *stack);
 
-void Push(Stack *stack, stack_type value);
+//==public funcs====
 
-stack_type Pop(Stack *stack);
+m_stack *m_stack_init();
 
-void Clear(Stack *stack);
+size_t m_stack_size(m_stack *cur_stack);
 
-void Destruct_Stack(Stack *stack);
+m_stack_type m_stack_back(m_stack *cur_stack);
+
+void m_stack_push(m_stack *cur_stack, m_stack_type value);
+
+m_stack_type m_stack_pop(m_stack *cur_stack);
+
+void m_stack_clear(m_stack *cur_stack);
+
+void m_stack_destrct(m_stack *cur_stack);
 
 //==================
+
+
+#endif /* "funcs_pub.h" */

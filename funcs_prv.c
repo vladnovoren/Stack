@@ -1,98 +1,112 @@
-#ifndef FUNCS_PRV_H
-    #include "funcs_prv.h"
-#endif
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#include <assert.h>
+
+
+//include declarations of all functions.
+#include "funcs_prv.h"
+
 
 //description of private functions
 
-
 //==========
-void Set_Defaults(Stack *stack){
-    assert(stack != NULL);
+void m_stack_set_deflts(m_stack *cur_stack)
+{
+    assert(cur_stack != NULL);
 
-    Set_Defaults_Local(stack);
-    Set_Defaults_Local(stack->copy);
+    m_stack_set_deflts_lcl(cur_stack);
+    m_stack_set_deflts_lcl(cur_stack->copy);
 }
 
 //
-void Set_Defaults_Local(Stack *stack){
-    assert(stack != NULL);
+void m_stack_set_deflts_lcl(m_stack *cur_stack)
+{
+    assert(cur_stack != NULL);
 
-    stack->left_cnry  = DFLT_STACK_CNRY_VAL;
+    cur_stack->left_cnry  = DFLT_STACK_CNRY_VAL;
 
-    stack->size       = DFLT_STACK_SIZE_VAL;
-    stack->cpcty      = DFLT_STACK_CPCTY_VAL;
+    cur_stack->size       = DFLT_STACK_SIZE_VAL;
+    cur_stack->cpcty      = DFLT_STACK_CPCTY_VAL;
 
-    free(stack->data);
-    stack->data       = (stack_type *)calloc(DFLT_STACK_CPCTY_VAL, sizeof(stack_type));
+    free(cur_stack->data);
+    cur_stack->data       = (m_stack_type *)calloc(DFLT_STACK_CPCTY_VAL, sizeof(m_stack_type));
 
-    stack->right_cnry = DFLT_STACK_CNRY_VAL;
+    cur_stack->right_cnry = DFLT_STACK_CNRY_VAL;
 }
 //==========
 
 
 //==========
-void Enlarge_Stack(Stack *stack){
-    assert(stack != NULL);
+void m_stack_enlarge(m_stack *cur_stack)
+{
+    assert(cur_stack != NULL);
     
-    Enlarge_Stack_Local(stack);
-    Enlarge_Stack_Local(stack->copy);
+    m_stack_enlarge_lcl(cur_stack);
+    m_stack_enlarge_lcl(cur_stack->copy);
 }
 
 //
-void Enlarge_Stack_Local(Stack *stack){
-    assert(stack != NULL);
+void m_stack_enlarge_lcl(m_stack *cur_stack)
+{
+    assert(cur_stack != NULL);
     
-    stack->cpcty *= 2;
+    printf("zalupa old: %lu\n", cur_stack->cpcty * sizeof(m_stack_type));
+    cur_stack->cpcty *= 2;
 
-    char *tmp = realloc(stack->data, stack->cpcty * sizeof(stack_type));
-    if(tmp == NULL)
-        printf("reduce balda\n");
+    printf("zalupa new: %lu\n", cur_stack->cpcty * sizeof(m_stack_type));
+    cur_stack->data = (m_stack_type *)realloc(cur_stack->data, cur_stack->cpcty * sizeof(m_stack_type));
+    //assert(tmp);
 
-    Insert_Poison_Local(stack);
+    m_stack_ins_poison_lcl(cur_stack);
 }
 //==========
 
 
 //==========
-void Reduce_Stack(Stack *stack){
-    assert(stack != NULL);
+void m_stack_reduce(m_stack *cur_stack)
+{
+    assert(cur_stack != NULL);
     
-    Reduce_Stack_Local(stack);
-    Reduce_Stack_Local(stack->copy);
+    m_stack_reduce_lcl(cur_stack);
+    m_stack_reduce_lcl(cur_stack->copy);
 }
 
 //
-void Reduce_Stack_Local(Stack *stack){
-    assert(stack != NULL);
+void m_stack_reduce_lcl(m_stack *cur_stack)
+{
+    assert(cur_stack != NULL);
 
-    stack->cpcty /= 2;
-    stack->size = (stack->size > stack->cpcty) ? stack->cpcty : stack->size;
+    cur_stack->cpcty /= 2;
+    cur_stack->size = (cur_stack->size > cur_stack->cpcty) ? cur_stack->cpcty : cur_stack->size;
 
-    char *tmp = realloc(stack->data, stack->cpcty * sizeof(stack_type));
-    if(tmp == NULL)
-        printf("reduce balda\n");
+    cur_stack->data = (m_stack_type *)realloc(cur_stack->data, cur_stack->cpcty * sizeof(m_stack_type));
+
+    m_stack_ins_poison_lcl(cur_stack);
 }
 //=========
 
 
 //=========
-int Resize_Stack(Stack *stack){
-    assert(stack != NULL);
+int m_stack_resize(m_stack *cur_stack)
+{
+    assert(cur_stack != NULL);
 
-    Resize_Stack_Local(stack);
-    return Resize_Stack_Local(stack->copy);
+    m_stack_resize_lcl(cur_stack);
+    return m_stack_resize_lcl(cur_stack->copy);
 }
 
 //
-int Resize_Stack_Local(Stack *stack){
-    assert(stack != NULL);
+int m_stack_resize_lcl(m_stack *cur_stack)
+{
+    assert(cur_stack != NULL);
 
-    if(4 * stack->size < stack->cpcty){
-        Reduce_Stack_Local(stack);
+    if (4 * cur_stack->size < cur_stack->cpcty) {
+        m_stack_reduce_lcl(cur_stack);
         return -1;
     }
-    if(stack->size >= stack->cpcty){
-        Enlarge_Stack_Local(stack);
+    if (cur_stack->size >= cur_stack->cpcty) {
+        m_stack_enlarge_lcl(cur_stack);
         return 1;
     }
     return 1;
@@ -101,59 +115,64 @@ int Resize_Stack_Local(Stack *stack){
 
 
 //==========
-void Insert_Poison(Stack *stack){
-    assert(stack != NULL);
+void m_stack_ins_poison(m_stack *cur_stack)
+{
+    assert(cur_stack != NULL);
 
-    Insert_Poison_Local(stack);
-    Insert_Poison_Local(stack->copy);
+    m_stack_ins_poison_lcl(cur_stack);
+    m_stack_ins_poison_lcl(cur_stack->copy);
 }
 
 //
-void Insert_Poison_Local(Stack *stack){
-    assert(stack != NULL);
+void m_stack_ins_poison_lcl(m_stack *cur_stack)
+{
+    assert(cur_stack != NULL);
 
-    for(int pos = stack->size; pos < stack->cpcty; pos++)
-        stack->data[pos] = STACK_POISON;
+    for (int pos = cur_stack->size; pos < cur_stack->cpcty; pos++)
+        cur_stack->data[pos] = STACK_POISON;
 }
 //==========
 
 
 //==========
-void Copy_Stack(Stack *stack){       
-    assert(stack != NULL);
+void m_stack_copy(m_stack *cur_stack)
+{
+    assert(cur_stack != NULL);
 
-    stack->copy->left_cnry = stack->left_cnry;
-    stack->copy->size = stack->size;
-    stack->copy->cpcty = stack->cpcty;
+    cur_stack->copy->left_cnry = cur_stack->left_cnry;
+    cur_stack->copy->size = cur_stack->size;
+    cur_stack->copy->cpcty = cur_stack->cpcty;
 
-    stack->copy->data = (stack_type *)calloc(stack->cpcty, sizeof(stack_type));
-    for(int pos = 0; pos < stack->cpcty; pos++)
-        stack->copy->data[pos] = stack->data[pos];
+    cur_stack->copy->data = (m_stack_type *)calloc(cur_stack->cpcty, sizeof (m_stack_type));
+    for (int pos = 0; pos < cur_stack->cpcty; pos++)
+        cur_stack->copy->data[pos] = cur_stack->data[pos];
 
-    stack->copy->right_cnry = stack->right_cnry;
+    cur_stack->copy->right_cnry = cur_stack->right_cnry;
 }
 //==========
 
 
 //==========
-void Clear_Stack_Local(Stack *stack){
-    assert(stack != NULL);
+void m_stack_clear_lcl(m_stack *cur_stack)
+{
+    assert(cur_stack != NULL);
 
-    free(stack->data);
-    free(stack);
+    free(cur_stack->data);
+    free(cur_stack);
 }
 //==========
 
 
 //==========
-void Recover_Stack(Stack *stack){
-    assert(stack != NULL);
+void m_stack_recover(m_stack *cur_stack)
+{
+    assert(cur_stack != NULL);
 
-    stack->size = stack->copy->size;
-    stack->cpcty = stack->copy->cpcty;
-    Resize_Stack_Local(stack);
+    cur_stack->size = cur_stack->copy->size;
+    cur_stack->cpcty = cur_stack->copy->cpcty;
+    m_stack_resize_lcl(cur_stack);
     
-    for(int pos = 0; pos < stack->cpcty; pos++)
-        stack->data[pos] = stack->copy->data[pos];
+    for (int pos = 0; pos < cur_stack->cpcty; pos++)
+        cur_stack->data[pos] = cur_stack->copy->data[pos];
 }
 //==========
