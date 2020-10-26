@@ -38,9 +38,9 @@ long long minimum(long long first, long long second);
 
 long long maximum(long long first, long long second);
 
-int set_deflts(m_stack *cur_stack);
+void set_deflts(m_stack *cur_stack);
 
-int resize(m_stack *cur_stack, size_t new_size);
+void resize(m_stack *cur_stack, size_t new_size);
 
 void ins_poison(m_stack *cur_stack);
 
