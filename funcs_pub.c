@@ -3,62 +3,69 @@
 #include <math.h>
 #include <assert.h>
 
-//include declarations of all functions.
 #include "funcs_prv.h"
+#include "assertion.h"
 
-//description of public functions
+//description of public functions.
+
+#ifdef DEBUG
+    #define DEBUG_CHECK \
+    int ver_ret = m_stack_verifier(cur_stack, __FILE__, __LINE__); \
+    if (ver_ret != 0) \
+        return ver_ret; 
+#endif
+
+#ifndef DEBUG_CHECK
+    #define DEBUG_CHECK
+#endif
+
+
 
 m_stack *m_stack_init()
 {
-    m_stack *new_stack = calloc(1, sizeof(m_stack));
-    assert(new_stack != NULL);
+    m_stack *new_m_stack = (m_stack *)calloc(1, sizeof(m_stack));
+    new_m_stack->data = NULL;
+    set_deflts(new_m_stack);
 
-    new_stack->copy  = calloc(1, sizeof(m_stack));
-    assert(new_stack->copy != NULL);
-
-    m_stack_set_deflts(new_stack);
-    m_stack_ins_poison(new_stack);
-
-    return new_stack;
+    return new_m_stack;
 }
 
 size_t m_stack_size(m_stack *cur_stack)
 {
-    assert(cur_stack != NULL);
+    DEBUG_CHECK
 
     return cur_stack->size;
 }
 
 m_stack_type m_stack_back(m_stack *cur_stack)
 {
-    assert(cur_stack != NULL);
+    DEBUG_CHECK
 
     if (cur_stack->size == 0) {
         printf("Stack is empty!\n");
 
-        return 0;
+        return 1;
     }
 
-    return cur_stack->data[cur_stack->size - 1];
+    return cur_stack->data[cur_stack->size];
 }
 
-void m_stack_push(m_stack *cur_stack, m_stack_type value)
+int m_stack_push(m_stack *cur_stack, m_stack_type value)
 {
-    assert(cur_stack != NULL);
+    DEBUG_CHECK
 
     cur_stack->size++;
-    cur_stack->copy->size++;
 
-    m_stack_resize(cur_stack);
-    m_stack_ins_poison(cur_stack);
+    resize(cur_stack, cur_stack->size);
 
-    cur_stack->data[cur_stack->size - 1] = value;
-    cur_stack->copy->data[cur_stack->size - 1] = value;
+    cur_stack->data[cur_stack->size] = value;
+
+    return 0;
 }
 
 m_stack_type m_stack_pop(m_stack *cur_stack)
 {
-    assert(cur_stack != NULL);
+    DEBUG_CHECK
 
     if (cur_stack->size == 0) {
         printf("Stack is empty\n");
@@ -66,33 +73,32 @@ m_stack_type m_stack_pop(m_stack *cur_stack)
         return 0;
     }
 
-    m_stack_type temp = cur_stack->data[cur_stack->size - 1];
-    cur_stack->data[cur_stack->size - 1] = STACK_POISON;
-    cur_stack->copy->data[cur_stack->size - 1] = STACK_POISON;
-
+    m_stack_type temp = cur_stack->data[cur_stack->size];
+    cur_stack->data[cur_stack->size] = STACK_POISON;
     cur_stack->size--;
-    cur_stack->copy->size--;
-    m_stack_resize(cur_stack);
+    resize(cur_stack, cur_stack->size);
 
     return temp;
 }
 
-void m_stack_clear(m_stack *cur_stack)
+int m_stack_clear(m_stack *cur_stack)
 {
-    assert(cur_stack != NULL);
 
-    m_stack_clear_lcl(cur_stack->copy);
-    m_stack_clear_lcl(cur_stack);
+    DEBUG_CHECK
 
-    cur_stack = m_stack_init();
+    set_deflts(cur_stack);
+
+    return 0;
 }
 
-void  m_stack_destrct(m_stack *cur_stack)
+int m_stack_destrct(m_stack *cur_stack)
 {
-    assert(cur_stack != NULL);
+    DEBUG_CHECK
 
-    m_stack_clear_lcl(cur_stack->copy);
-    m_stack_clear_lcl(cur_stack);
+    free(cur_stack->data);
+    free(cur_stack);
+
+    return 0;
 }
 
 //==================================

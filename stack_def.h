@@ -10,19 +10,7 @@
 #include "stack_decl.h"
 
 
-typedef struct m_stack {
-    unsigned long long left_cnry;
-
-    size_t size;
-
-    size_t cpcty;
-
-    struct m_stack *copy;
-
-    m_stack_type *data;
-
-    unsigned long long right_cnry;
-} m_stack;
+typedef struct stack stack;
 
 
 #endif /* "stack_def.h" */
