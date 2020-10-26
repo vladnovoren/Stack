@@ -10,9 +10,11 @@
 
 #ifdef DEBUG
     #define DEBUG_CHECK \
+    { \
     int ver_ret = m_stack_verifier(cur_stack, __FILE__, __LINE__); \
     if (ver_ret != 0) \
-        return ver_ret; 
+        return ver_ret; \
+    }
 #endif
 
 #ifndef DEBUG_CHECK
@@ -47,6 +49,7 @@ m_stack_type m_stack_back(m_stack *cur_stack)
         return 1;
     }
 
+    DEBUG_CHECK
     return cur_stack->data[cur_stack->size];
 }
 
@@ -59,6 +62,8 @@ int m_stack_push(m_stack *cur_stack, m_stack_type value)
     resize(cur_stack, cur_stack->size);
 
     cur_stack->data[cur_stack->size] = value;
+
+    DEBUG_CHECK
 
     return 0;
 }
@@ -78,6 +83,8 @@ m_stack_type m_stack_pop(m_stack *cur_stack)
     cur_stack->size--;
     resize(cur_stack, cur_stack->size);
 
+    DEBUG_CHECK
+
     return temp;
 }
 
@@ -87,6 +94,8 @@ int m_stack_clear(m_stack *cur_stack)
     DEBUG_CHECK
 
     set_deflts(cur_stack);
+
+    DEBUG_CHECK
 
     return 0;
 }
