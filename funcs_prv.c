@@ -21,8 +21,6 @@ long long maximum(long long first, long long second)
     return (first > second) ? first : second;
 }
 
-
-
 void set_deflts(m_stack *cur_stack)
 {
     cur_stack->left_cnry  = DFLT_STACK_CNRY_VAL;
@@ -39,7 +37,7 @@ void set_deflts(m_stack *cur_stack)
     ins_poison(cur_stack);
 
     count_data_ptr_hash(cur_stack);
-    count_hash(cur_stack);
+    count_data_hash(cur_stack);
 
     cur_stack->right_cnry = DFLT_STACK_CNRY_VAL;
 }
@@ -77,19 +75,20 @@ int hash_formula(int prev, int cur)
     return ((prev + hash_const) % hash_mod) * (cur % hash_mod) % hash_mod;
 }
 
-int count_hash(m_stack *cur_stack)
+int count_data_hash(m_stack *cur_stack)
 {
     assert(cur_stack != NULL);
 
-    char *first = (char *)(cur_stack->data + 1);
-    char *last = (char *)(cur_stack->data + cur_stack->size + 1);
+    char *first = (char *)cur_stack->data + 1;
+    char *last = (char *)cur_stack->data + cur_stack->size + 1;
 
     int cur = 1;
 
-    for (char *ptr = first; ptr != last; ptr++)
+    for (char *ptr = first; ptr != last; ptr++) {
         cur = hash_formula((int)*ptr, cur);
+    }
     
-    cur_stack->hash = cur;
+    cur_stack->data_hash = cur;
     return cur;
 }
 
@@ -102,8 +101,9 @@ int count_data_ptr_hash(m_stack *cur_stack)
 
     int cur = 1;
 
-    for (char *ptr = first; ptr != last; ptr++)
+    for (char *ptr = first; ptr != last; ptr++) {
         cur = hash_formula((int)*ptr, cur);
+    }
     
     cur_stack->data_ptr_hash = cur;
     return cur;

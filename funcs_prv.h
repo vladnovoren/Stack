@@ -21,7 +21,7 @@ struct m_stack {
 
     int data_ptr_hash;
 
-    int hash;
+    int data_hash;
 
     double right_cnry;
 };
@@ -48,7 +48,7 @@ void ins_poison(m_stack *cur_stack);
 
 int count_data_ptr_hash(m_stack *cur_stack);
 
-int count_hash(m_stack *cur_stack);
+int count_data_hash(m_stack *cur_stack);
 
 int hash_formula(int prev, int cur);
 
