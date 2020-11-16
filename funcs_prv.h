@@ -19,6 +19,8 @@ struct m_stack {
 
     m_stack_type *data;
 
+    int data_ptr_hash;
+
     int hash;
 
     double right_cnry;
@@ -43,6 +45,8 @@ void set_deflts(m_stack *cur_stack);
 void resize(m_stack *cur_stack, size_t new_size);
 
 void ins_poison(m_stack *cur_stack);
+
+int count_data_ptr_hash(m_stack *cur_stack);
 
 int count_hash(m_stack *cur_stack);
 

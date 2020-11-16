@@ -38,6 +38,7 @@ void set_deflts(m_stack *cur_stack)
 
     ins_poison(cur_stack);
 
+    count_data_ptr_hash(cur_stack);
     count_hash(cur_stack);
 
     cur_stack->right_cnry = DFLT_STACK_CNRY_VAL;
@@ -89,6 +90,22 @@ int count_hash(m_stack *cur_stack)
         cur = hash_formula((int)*ptr, cur);
     
     cur_stack->hash = cur;
+    return cur;
+}
+
+int count_data_ptr_hash(m_stack *cur_stack)
+{
+    assert(cur_stack != NULL);
+
+    char *first = (char *)(&cur_stack->data);
+    char *last = first + sizeof(m_stack_type *);
+
+    int cur = 1;
+
+    for (char *ptr = first; ptr != last; ptr++)
+        cur = hash_formula((int)*ptr, cur);
+    
+    cur_stack->data_ptr_hash = cur;
     return cur;
 }
 

@@ -11,9 +11,12 @@
 #ifdef DEBUG
     #define DEBUG_CHECK \
     { \
+    FILE *log = fopen("stack_log.txt", "a"); \
     int ver_ret = m_stack_verifier(cur_stack, __FILE__, __LINE__); \
     if (ver_ret != 0) \
+        fclose(log); \
         return ver_ret; \
+    fclose(log); \
     }
 #endif
 

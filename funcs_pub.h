@@ -13,7 +13,7 @@
 
 typedef struct m_stack m_stack;
 typedef double m_stack_type;
-static const char *PRINT_FLAG = "%f";
+static const char *PRINT_FLAG = "%lf";
 
 //== public funcs ==
 
