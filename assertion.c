@@ -109,7 +109,6 @@ int m_stack_verifier(m_stack *cur_stack, char *file_name, int line_num)
     }
 
     if (cur_stack->right_cnry != DFLT_STACK_CNRY_VAL) {
-        printf("1we21fr\n");
         LOG_PRINT(STACK_RIGHT_CANARY_DIED)
         fprintf(log, "%d: right canary died.\n", STACK_RIGHT_CANARY_DIED);
 
@@ -121,7 +120,7 @@ int m_stack_verifier(m_stack *cur_stack, char *file_name, int line_num)
 
     int old_data_ptr_hash = cur_stack->data_ptr_hash;
     count_data_ptr_hash(cur_stack);
-    printf("%d %d\n", old_data_ptr_hash, cur_stack->data_ptr_hash);
+
     if (old_data_ptr_hash != cur_stack->data_ptr_hash) {
         LOG_PRINT(STACK_WRONG_DATA_PTR);
         fprintf(log, "%d: wrong data ptr.\n", STACK_WRONG_DATA_PTR);
