@@ -125,10 +125,9 @@ void m_stack_dump(m_stack *cur_stack, int is_data_valid)
 
 //file_name, func_name, line_num
 
-int* m_stack_verifier(m_stack *cur_stack, char *file_name, const char *func_name, int line_num)
+void m_stack_verifier(m_stack *cur_stack, char *file_name, const char *func_name, int line_num, int errors[11])
 {
     FILE *log = fopen("stack_log.txt", "a");
-    int *errors = (int *)calloc(ERR_CNT, sizeof(int));
     int is_data_valid = VALID_DATA;
     int is_stack_pointer_valid = VALID_DATA;
 
@@ -138,7 +137,7 @@ int* m_stack_verifier(m_stack *cur_stack, char *file_name, const char *func_name
         is_stack_pointer_valid = INVALID_DATA;
         errors[STACK_NULL] = INVALID_DATA;
         errors[STACK_ALRIGHT] = INVALID_DATA;
-        return errors;
+        return;
     }
 
     if (cur_stack->data == NULL) {
@@ -228,21 +227,20 @@ int* m_stack_verifier(m_stack *cur_stack, char *file_name, const char *func_name
             errors[err_code] = UNDEF_STATE;
     }
 
-
-    printf("\nfile: %s, function: %s, line: %d\n", file_name, func_name, line_num);
-    if (errors[STACK_ALRIGHT] == VALID_DATA)
-        printf("stack is alright.\n");
-    else
+    if (errors[STACK_ALRIGHT] != VALID_DATA)
+    {
+        printf("\nfile: %s, function: %s, line: %d\n", file_name, func_name, line_num);
         printf("stack is broken.\n");
+        printf("you can see more info in \"stack_log.txt\".\n");
+    }
 
-    printf("you can see more info in \"stack_log.txt\".\n");
 
     if (is_stack_pointer_valid == INVALID_DATA) {
         fprintf(log , "unable to show stack dump because pointer to stack is NULL.\n");
         fclose(log);
-    } else {
+    } else if (errors[STACK_ALRIGHT] != VALID_DATA) {
         fclose(log);
         m_stack_dump(cur_stack, is_data_valid);
     }
-    return errors;
+    return;
 }

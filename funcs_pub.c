@@ -12,10 +12,11 @@
     #define DEBUG_CHECK \
     { \
     FILE *log = fopen("stack_log.txt", "a"); \
-    int *ver_ret = m_stack_verifier(cur_stack, __FILE__, __PRETTY_FUNCTION__, __LINE__); \
-    if (ver_ret[0] == INVALID_DATA) \
+    int errors[11] = {};\
+    m_stack_verifier(cur_stack, __FILE__, __PRETTY_FUNCTION__, __LINE__, errors); \
+    if (errors[0] == INVALID_DATA) \
         fclose(log); \
-        return ver_ret[0]; \
+        return errors[0]; \
     fclose(log); \
     }
 #endif

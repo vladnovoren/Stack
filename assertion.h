@@ -10,7 +10,7 @@
 
 void m_stack_dump(m_stack *stack, int is_valid_data);
 
-int* m_stack_verifier(m_stack *stack, char *file_name, const char *func_name, int line_num);
+void m_stack_verifier(m_stack *stack, char *file_name, const char *func_name, int line_num, int errors[11]);
 
 static const int VALID_DATA   = 0;
 static const int INVALID_DATA = 1;
